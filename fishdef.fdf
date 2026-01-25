@@ -1,0 +1,11 @@
+@name Anaxa
+@eats plant
+@colouring green, green, white, white, white, blue
+
+@animation frames=2 time=0.5
+@facing left
+<:==-<
+<===-<
+@facing right
+>-==:>
+>-===>

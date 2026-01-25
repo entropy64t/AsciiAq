@@ -1,0 +1,9 @@
+[project]
+name = "ascii_aquarium"
+version = "0.1.0"
+
+[tool.black]
+line-length = 88
+
+[project.scripts]
+asciiaq = "game.main:main"
