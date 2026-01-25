@@ -5,3 +5,4 @@ test.py
 report.txt
 __init__.py-writer.py
 run.py
+profiler.py
