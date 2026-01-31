@@ -1,0 +1,11 @@
+@name TestPredator
+@eats anaxa
+@colouring red, orange, yellow, red, white
+
+@animation frames=2 time=0.5
+@facing left
+(##)<
+([#)<
+@facing right
+>(##)
+>(#])

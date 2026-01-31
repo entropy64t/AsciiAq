@@ -1,47 +1,50 @@
 from __future__ import annotations
-from game import *
+# from game import *
+from game.aquarium import start, read_fdf
+import argparse
+import random
+
+import tea_engine as tea
+
+def randomvec(bounds: tea.Bounds2):
+    x = random.randint(bounds.tl.x, bounds.br.x)
+    y = random.randint(bounds.tl.y, bounds.br.y)
+    return tea.Vector2(x, y)
 
 def profile(ncalls: int = 100):
-    print(Colour.reset())
-    fish = read_fdf("fishdef.fdf")
+    print(tea.Colour.reset())
+    fish = read_fdf("fish/fishdef.fdf")
 
-    clock = Clock(0)
+    clock = tea.Clock(0)
     clock.tick_rate = 0
-    bounds = Bounds2(Vector2(0, 0), Vector2(1400, 300))
-    engine = Engine(bounds)
-    renderer = Renderer(engine)
+    bounds = tea.Bounds2(tea.Vector2(0, 0), tea.Vector2(1300, 300))
+    engine = tea.Engine(bounds)
+    renderer = tea.Renderer(engine)
     
     clock += engine.update
     clock += renderer.clear
     clock += renderer.render
     
     for i in range(50000):
-        engine.spawn_fish(fish, Vector2.random(bounds)).assign_ai(SimpleAI())
+        engine.spawn(fish, randomvec(bounds)).assign_ai(tea.SimpleAI())
+    print("fish done")
     
     for i in range(ncalls):
         clock.tick()
             
 def main():
-    print(Colour.reset())
-    fish = read_fdf("fishdef.fdf")
-
-    clock = Clock(0.2)
-    bounds = Bounds2(Vector2(0, 0), Vector2(80, 20))
-    engine = Engine(bounds)
-    renderer = Renderer(engine)
+    parser = argparse.ArgumentParser()
     
-    clock += engine.update
-    clock += renderer.clear
-    clock += renderer.render
+    parser.add_argument("nfish", help="Number of initial fish", metavar="<nfish>")
+    parser.add_argument("-t", "--tick", help="Specify tick rate. Default: 250ms", default=0.25, metavar="<tick>")
+    parser.add_argument("--log", action="store_true", help="If set, enables logging", default=False)
+    parser.add_argument("-W", help="Width of aquarium. Default: 60", default=60, metavar="<width>")
+    parser.add_argument("-H", help="Height of aquarium. Default: 25", default=25, metavar="<height>")
     
-    for i in range(10):
-        engine.spawn_fish(fish, Vector2.random(bounds)).assign_ai(SimpleAI())
-
-    try:
-        while True:
-            clock.tick()
-    except KeyboardInterrupt:
-        return
+    args = parser.parse_args()
+    print(args)
+    
+    start(int(args.nfish), args.log, tea.Vector2(int(args.W), int(args.H)), float(args.tick))
     
 if __name__ == "__main__":
     main()

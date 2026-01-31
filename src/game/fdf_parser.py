@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
 
-if TYPE_CHECKING:
-    from game import Engine
-from game import AnimationData, Colour, EntityTag, Fish
+from game.fish import Fish
 
-def read_fdf(path: str, engine: Optional[Engine] = None):
+import tea_engine as tea
+
+def read_fdf(path: str, engine: Optional[tea.Engine] = None):
     with open(path, 'r') as file:
         data = file.read().splitlines()
         text = file.read()
@@ -14,7 +14,7 @@ def read_fdf(path: str, engine: Optional[Engine] = None):
     name = "<error>"
     eats_data: list[str] = []
     colouring_data: list[str] = []
-    animation: Optional[AnimationData] = None
+    animation: Optional[tea.AnimationData] = None
     for i, line in enumerate(data):
         if line.startswith("@name"):
             name = line.removeprefix("@name").strip()
@@ -31,8 +31,8 @@ def read_fdf(path: str, engine: Optional[Engine] = None):
     #print(eats_data)
     #print(colouring_data)
     
-    colouring = [Colour.from_str(c) for c in colouring_data]
-    eats = [EntityTag(e) for e in eats_data]
+    colouring = [tea.Colour.from_str(c) for c in colouring_data]
+    eats = [tea.EntityTag(e) for e in eats_data]
     
     if animation is None:
         raise ValueError("Error with animation")
@@ -45,7 +45,7 @@ def read_fdf(path: str, engine: Optional[Engine] = None):
         engine=engine
     )
     
-def _parse_animation(data: list[str]) -> AnimationData:
+def _parse_animation(data: list[str]) -> tea.AnimationData:
     frame_count: int = 0
     frame_time: float = 0
     frames_l: list[str] = []
@@ -72,5 +72,5 @@ def _parse_animation(data: list[str]) -> AnimationData:
     #print(frames_l)
     #print(frames_r)
                 
-    return AnimationData(frame_count, frames_l, frames_r, frame_time)
+    return tea.AnimationData(frame_count, frames_l, frames_r, frame_time)
             
